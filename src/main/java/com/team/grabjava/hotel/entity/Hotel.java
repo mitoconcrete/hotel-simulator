@@ -1,4 +1,4 @@
-package main.java.com.team.grabjava.hotel.entity;
+package com.team.grabjava.hotel.entity;
 
 import java.util.ArrayList;
 
