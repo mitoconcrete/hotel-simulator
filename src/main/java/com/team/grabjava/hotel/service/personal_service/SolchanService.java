@@ -14,9 +14,11 @@ public class SolchanService {
     // 클라이언트가 입력한 유저 정보를 확인하여 맞으면 DB로 보내고 틀리면 오류값을 클라이언트로 보내는 메서드?
     public boolean inputUserData(){
         // front 정보 입력 요청 -> 클라이언트 정보 입력 -> 입력한 정보는 여기로 와서 조건을 거쳐 다음 절차로 진행?
-        // 이름이 비었거나 , 소지금을 음수로 입력했다면
+        // 이름이 비었거나 , 소지금을 음수로 입력했다면?
         if(userName == " " || userAsset <= 0){
+            // false 값 리턴
             return false;
+            // 위 조건이 틀리면 true 리턴
         }else{
             return true;
         }
