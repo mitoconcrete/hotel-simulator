@@ -16,4 +16,9 @@ public class TaehoonService {
                                     .map(reservation -> reservation.getId())
                                     .collect(Collectors.toList());
     }
+
+    public boolean checkAdminPassword(String password){
+        final String adminPassword = "password";
+        return adminPassword.equals(password);
+    }
 }
