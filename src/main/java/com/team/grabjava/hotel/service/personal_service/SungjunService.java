@@ -39,14 +39,15 @@ public class SungjunService {
         return Pattern.matches("^20\\d{2}-(?:0[0-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-9]|3[0-1])$", date);
     }
 
-    public String getReservationContent(String reservationId){
+    public String getReservationContent(String reservationId) {
         String reservationContent = "";
         for (Reservation r : reservationRepository.getReservationList()) {
-            if(r.getId().equals(reservationId)){
+            if (r.getId().equals(reservationId)) {
                 reservationContent += r.getId() + " " + r.getReservationDate() + " " + r.getRoom().getRoomSize();
             }
         }
         return reservationContent;
+    }
 
     public boolean requestReservationCancel(String reservationId){
         for (Reservation r : reservationRepository.getReservationList()) {
