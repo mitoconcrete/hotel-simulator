@@ -18,11 +18,11 @@ public class Room {
         return roomNo;
     }
 
-    public int getRoomSize(){
+    public int getSize(){
         return size;
     }
 
-    public int getRoomPrice(){
+    public int getPrice(){
         return price;
     }
 }
