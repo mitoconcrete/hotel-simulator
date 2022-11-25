@@ -1,26 +1,25 @@
 package com.team.grabjava.hotel.service.personal_service;
 
+import com.team.grabjava.hotel.repository.UserRepository;
+
 public class SolchanService {
-    private String userName;
-    private String userPhone;
-    private int userAsset;
+    // 1. 인자를 받아서, DB에서 List를 전달받아서, 해당되는 유저를 찾는다.(이미있는지 없는지) - getUserList
+    // 2. 이미있다면, 이미있는 유저를 리턴해주고
+    // 3. 없다면, 새로운 유저를 만들어달라고, DB에게 요청한다
 
-    public SolchanService(String userName, String userPhone, int userAsset){
-        this.userName = userName;
-        this.userPhone = userPhone;
-        this.userAsset = userAsset;
-    }
+    UserRepository userRepository = new UserRepository();
 
-    // 클라이언트가 입력한 유저 정보를 확인하여 맞으면 DB로 보내고 틀리면 오류값을 클라이언트로 보내는 메서드?
-    public boolean inputUserData(){
-        // front 정보 입력 요청 -> 클라이언트 정보 입력 -> 입력한 정보는 여기로 와서 조건을 거쳐 다음 절차로 진행?
-        // 이름이 비었거나 , 소지금을 음수로 입력했다면?
-        if(userName == " " || userAsset <= 0){
-            // false 값 리턴
-            return false;
-            // 위 조건이 틀리면 true 리턴
-        }else{
-            return true;
+    // 사용자가 입력한 값(이름, 전화번호)을 db와 확인하는 매소드
+    public boolean isFindUserService(String userName, String userPhone) {
+        for (User user : userRepository.getUserList()) {
+            if (userName.equals(user.getUserName()) && userPhone.equals(user.getUserPhone())) {
+                return true;
+            }
         }
+
+        return false;
     }
+
+
 }
+
