@@ -1,4 +1,34 @@
 package com.team.grabjava.hotel.service.personal_service;
 
+import com.team.grabjava.hotel.entity.Hotel;
+import com.team.grabjava.hotel.entity.Reservation;
+import com.team.grabjava.hotel.entity.Room;
+import com.team.grabjava.hotel.repository.HotelRepository;
+import com.team.grabjava.hotel.repository.ReservationRepository;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 public class SungjunService {
+    private HotelRepository hotelRepository = new HotelRepository();
+    private ReservationRepository reservationRepository = new ReservationRepository();
+    public List<Room> getRoomList(String date){
+        List<Room> list = new ArrayList<>();
+        for(int i=0;i<hotelRepository.getRoomList().size();i++){
+            list.add(hotelRepository.getRoomList().get(i));
+        }
+
+        for(Room room : hotelRepository.getRoomList()) {
+            for (Reservation reservation : reservationRepository.getReservationList()) {
+                String reservationDate = reservation.getReservationDate().toString().substring(0, 10);
+                if (reservationDate.equals(date) && reservation.getRoomNo()==room.getRoomNo()) {
+                    list.remove(room);
+                    break;
+                }
+            }
+        }
+
+        return list;
+    }
 }
