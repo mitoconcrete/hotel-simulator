@@ -26,5 +26,11 @@ public class ReservationRepository {
         return reservation;
     }
 
+    // 예약 삭제
+    public void deleteReservation(Reservation reservation){
+        reservationList.remove(reservation);
+    }
+
+
 
 }
