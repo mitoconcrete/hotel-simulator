@@ -24,7 +24,7 @@ public class SungjunService {
 
         for(Room room : hotelRepository.getRoomList()) {
             for (Reservation reservation : reservationRepository.getReservationList()) {
-                String reservationDate = reservation.getReservationDate().toString().substring(0, 10);
+                String reservationDate = reservation.getReservationDate().substring(0, 10);
                 if (reservationDate.equals(date) && reservation.getRoomNo()==room.getRoomNo()) {
                     list.remove(room);
                     break;
