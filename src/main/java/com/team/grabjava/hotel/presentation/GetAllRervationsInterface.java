@@ -1,4 +1,4 @@
-package main.java.com.team.grabjava.hotel.presentation;
+package com.team.grabjava.hotel.presentation;
 
 public class GetAllRervationsInterface {
 }

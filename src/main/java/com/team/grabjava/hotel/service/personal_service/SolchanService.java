@@ -2,6 +2,7 @@ package com.team.grabjava.hotel.service.personal_service;
 
 import com.team.grabjava.hotel.repository.UserRepository;
 
+
 public class SolchanService {
     // 1. 인자를 받아서, DB에서 List를 전달받아서, 해당되는 유저를 찾는다.(이미있는지 없는지) - getUserList
     // 2. 이미있다면, 이미있는 유저를 리턴해주고
