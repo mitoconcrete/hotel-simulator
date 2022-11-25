@@ -59,7 +59,6 @@ public class SungjunService {
         return reservation;
     }
 
-
     public boolean requestReservationCancel(String reservationId){
         for (Reservation r : reservationRepository.getReservationList()) {
             if(r.getId().equals(reservationId)){
