@@ -35,6 +35,7 @@ public class SolchanService {
             if (userName.equals(user.getUserName() && userPhone.equals(user.getUserPhone))) {
                 // 유저리스트 의 소지금을 변경하는 매서드를 실행해라.
                 userRepository.setUserAsset(user, userAsset);
+                return;
             }
         }
     }
