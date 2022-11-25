@@ -23,8 +23,21 @@ public class SolchanService {
 
     // 새로운 유저를 생성하는 매소드
     // 매개변수로 받은 userName, userPhone, userAsset 을 기존 유저리스트에 추가한다.
-    public void createUserService(String userName, String userPhone, int userAsset){
+    public void createUserService(String userName, String userPhone, int userAsset) {
         userRepository.createUser(userName, userPhone, userAsset);
+    }
+
+    //  유저정보 : 소지금 업데이트 매소드
+    //  매개변수르 이름과 전화번호를 받아 둘다 일치하는 유저db에 소지금을 업데이트시킨다.
+    public void updateUserAssetService(String userName, String userPhone, String userAsset) {
+        for (User user : userRepository.getUserList()) {
+            // 이름, 전화번호가 모두 일치하는 유저리스트가 있다면
+            if (userName.equals(user.getUserName() && userPhone.equals(user.getUserPhone))) {
+                // 유저리스트 의 소지금을 변경하는 매서드를 실행해라.
+                userRepository.setUserAsset(user, userAsset);
+                return;
+            }
+        }
     }
 }
 
