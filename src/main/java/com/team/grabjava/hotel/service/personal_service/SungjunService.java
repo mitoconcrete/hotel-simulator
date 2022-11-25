@@ -9,6 +9,7 @@ import com.team.grabjava.hotel.repository.ReservationRepository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class SungjunService {
     private HotelRepository hotelRepository = new HotelRepository();
@@ -35,18 +36,7 @@ public class SungjunService {
     }
 
     public boolean checkDateFormat(String date) {
-        if (date.length() == 10 && date.contains("-")) {
-            date = date.replace("-", "");
-            if (date.length() == 8) {
-                for (int i = 0; i < 8; i++) {
-                    if ((int) date.charAt(i) > 57 || (int) date.charAt(i) < 48) {
-                        return false;
-                    }
-                }
-                return true;
-            }
-        }
-        return false;
+        return Pattern.matches("^20\\d{2}-(?:0[0-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-9]|3[0-1])$", date);
     }
 
     public String getReservationContent(String reservationId){
@@ -60,20 +50,7 @@ public class SungjunService {
     }
 
     public boolean phoneNumberValidation(String phoneNumber){
-        if (phoneNumber.length() == 13 && phoneNumber.contains("-")) {
-            if(phoneNumber.charAt(3)=='-'&&phoneNumber.charAt(8)=='-') {
-                phoneNumber = phoneNumber.replace("-", "");
-                if (phoneNumber.length() == 11) {
-                    for (int i = 0; i < 11; i++) {
-                        if ((int) phoneNumber.charAt(i) > 57 || (int) phoneNumber.charAt(i) < 48) {
-                            return false;
-                        }
-                    }
-                    return true;
-                }
-            }
-        }
-        return false;
+        return Pattern.matches("^01(?:0|1|[6-9])-\\d{4}-\\d{4}$", phoneNumber);
     }
 
 }
