@@ -8,6 +8,9 @@ import java.util.List;
 public class HotelRepository {
     private Hotel hotel = new Hotel();
 
+    public int getAsset(){
+        return hotel.getHotelAsset();
+    }
     public void setAsset(int price){
         hotel.setAsset(price);
     }

@@ -23,7 +23,8 @@ public class TaehoonService {
         return adminPassword.equals(password);
     }
 
-    public void updateHotelAsset(int userAsset){
+    public int updateHotelAsset(int userAsset){
         hotelRepository.setAsset(userAsset);
+        return hotelRepository.getAsset();
     }
 }
