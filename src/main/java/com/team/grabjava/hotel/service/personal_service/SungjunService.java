@@ -49,4 +49,14 @@ public class SungjunService {
         return false;
     }
 
+    public Reservation getReservation(String reservationId){
+        Reservation reservation = null;
+        for (Reservation r : reservationRepository.getReservationList()) {
+            if(r.getId().equals(reservationId)){
+                reservation = r;
+            }
+        }
+        return reservation;
+    }
+
 }
