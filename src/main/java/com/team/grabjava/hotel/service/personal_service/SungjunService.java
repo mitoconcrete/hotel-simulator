@@ -59,4 +59,19 @@ public class SungjunService {
         return reservationContent;
     }
 
+    public boolean phoneNumberValidation(String phoneNumber){
+        if (phoneNumber.length() == 13 && phoneNumber.contains("-")) {
+            phoneNumber = phoneNumber.replace("-", "");
+            if (phoneNumber.length() == 11) {
+                for (int i = 0; i < 11; i++) {
+                    if ((int) phoneNumber.charAt(i) > 57 || (int) phoneNumber.charAt(i) < 48) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
