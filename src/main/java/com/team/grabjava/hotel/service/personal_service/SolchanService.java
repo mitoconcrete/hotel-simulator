@@ -24,7 +24,7 @@ public class SolchanService {
     // 새로운 유저를 생성하는 매소드
     // 매개변수로 받은 userName, userPhone, userAsset 을 기존 유저리스트에 추가한다.
     public void createUserService(String userName, String userPhone, int userAsset){
-        userRepository.createUser();
+        userRepository.createUser(String userName, String userPhone, int userAsset);
     }
 }
 
