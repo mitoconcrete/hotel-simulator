@@ -14,7 +14,7 @@ public class SungjunService {
     private HotelRepository hotelRepository = new HotelRepository();
     private ReservationRepository reservationRepository = new ReservationRepository();
 
-    public List<Room> getRoomList(String date){
+    public List<Room> getReservationableRoomList(String date){
         List<Room> list = new ArrayList<>();
 
         for(int i=0;i<hotelRepository.getRoomList().size();i++){
@@ -34,7 +34,7 @@ public class SungjunService {
         return list;
     }
 
-    boolean checkDateFormat(String date) {
+    public boolean checkDateFormat(String date) {
         if (date.length() == 10 && date.contains("-")) {
             date = date.replace("-", "");
             if (date.length() == 8) {
@@ -49,14 +49,14 @@ public class SungjunService {
         return false;
     }
 
-    public Reservation getReservation(String reservationId){
-        Reservation reservation = null;
+    public String getReservationContent(String reservationId){
+        String reservationContent = "";
         for (Reservation r : reservationRepository.getReservationList()) {
             if(r.getId().equals(reservationId)){
-                reservation = r;
+                reservationContent += r.getId() + " " + r.getReservationDate() + " " + r.getRoom().getRoomSize();
             }
         }
-        return reservation;
+        return reservationContent;
     }
 
 }
