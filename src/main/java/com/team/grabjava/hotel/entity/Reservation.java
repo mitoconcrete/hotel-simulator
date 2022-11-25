@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.UUID;
 
 public class Reservation {
-    private String id;
+    private final String id;
     // 예약 번호
     private Room room;                 // 객실 번호
     private String userName;            // 고객 이름
@@ -26,8 +26,8 @@ public class Reservation {
         return id;
     }
 
-    public int getRoomNo() {
-        return room.getRoomNo();
+    public Room getRoom() {
+        return room;
     }
 
     public String getUserName() {

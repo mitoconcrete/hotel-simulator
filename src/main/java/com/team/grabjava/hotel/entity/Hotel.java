@@ -4,17 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Hotel {
+    private final int INITIAL_ROOM_COUNT = 15;
+    private final int INIITAL_HOTEL_ASSSET = 1_000_000;
     private List<Room> roomList = new ArrayList<>();
     private int hotelAsset;
 
     public Hotel(){
-        for(int i=1;i<16;i++){
-            if(i<6) this.roomList.add(new Room(i,10,80000));
-            else if(i<11) this.roomList.add(new Room(i,15,120000));
-            else this.roomList.add(new Room(i,18,150000));
+        for (int i = 1; i <= INITIAL_ROOM_COUNT; i++) {
+            if (i < 6) this.roomList.add(new Room(i, 10, 80000));
+            else if (i < 11) this.roomList.add(new Room(i, 15, 120000));
+            else this.roomList.add(new Room(i, 18, 150000));
         }
 
-        this.hotelAsset = 1000000;
+        this.hotelAsset = INIITAL_HOTEL_ASSSET;
     }
 
     public void setAsset(int price){

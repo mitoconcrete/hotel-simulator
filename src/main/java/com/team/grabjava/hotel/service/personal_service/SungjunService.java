@@ -25,7 +25,7 @@ public class SungjunService {
         for(Room room : hotelRepository.getRoomList()) {
             for (Reservation reservation : reservationRepository.getReservationList()) {
                 String reservationDate = reservation.getReservationDate().substring(0, 10);
-                if (reservationDate.equals(date) && reservation.getRoomNo()==room.getRoomNo()) {
+                if (reservationDate.equals(date) && reservation.getRoom().getRoomNo()==room.getRoomNo()) {
                     list.remove(room);
                     break;
                 }
@@ -43,7 +43,7 @@ public class SungjunService {
         String reservationContent = "";
         for (Reservation r : reservationRepository.getReservationList()) {
             if (r.getId().equals(reservationId)) {
-                reservationContent += r.getId() + " " + r.getReservationDate() + " " + r.getRoom().getRoomSize();
+                reservationContent += r.getId() + " " + r.getReservationDate() + " " + r.getRoom().getSize();
             }
         }
         return reservationContent;

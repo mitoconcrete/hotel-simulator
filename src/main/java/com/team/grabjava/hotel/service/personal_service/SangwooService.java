@@ -1,30 +1,26 @@
 package com.team.grabjava.hotel.service.personal_service;
 
-import com.team.grabjava.hotel.entity.Reservation;
 import com.team.grabjava.hotel.entity.Room;
 import com.team.grabjava.hotel.entity.User;
-import com.team.grabjava.hotel.presentation.ReservationCancelInterface;
-import com.team.grabjava.hotel.presentation.ReservationInterface;
 import com.team.grabjava.hotel.repository.ReservationRepository;
 import com.team.grabjava.hotel.repository.UserRepository;
-import com.team.grabjava.hotel.service.HotelService;
-
-import java.util.ArrayList;
-import java.util.Date;
 
 public class SangwooService {       // getUserList에서 이름, 번호 같은 사람을 꺼내서
 
     UserRepository userRepository = new UserRepository();
+    ReservationRepository reservationRepository = new ReservationRepository();
 
     public String requestReservation(int roomNo, String userName, String userPhone, String date) {
         for (Room room : getReservationableRoomList(date)) {         // ReservationList - list에서 해당 date에 예약 가능한 방정보를 모두 불러온다.       사용방법 잘못됨 -> 이유알면 date쓰는이유도 알게됨
-            if (room.equals(roomNo)) {                              // 그 중에 roomNo와 일치하는 room list가 있다면
+            if (room.getRoomNo() == roomNo) {                              // 그 중에 roomNo와 일치하는 room list가 있다면
                 for (User user : userRepository.getUserList()) {
                     if (user.getUserName().equals(userName) && user.getUserPhone().equals(userPhone)) {
-                        if (user.getUserAsset() >= reservationRepository.getprice()) {
+                        if (user.getUserAsset() >= room.getPrice()) {
                              // ReservationRepository에서 id를 새로 생성해주고 Db에 저장해준다.
                             // id를 받아와야됨 -> reservationRapository에서 reservation list를 for문으로 돌리고, if문으로 이름번호 같은애(다른거도 비교해야하나 생각해보기) 뽑아서 같은거의 id값을 찾는다.
-                            return reservationRepository.createReservation(room, userName, userPhone, date);  // 찾은거를 (reservation.getId)리턴한다.
+                            int updateUserAsset = user.getUserAsset() - room.getPrice();
+                            user.setUserAsset(updateUserAsset);
+                            return reservationRepository.createReservation(room, userName, userPhone, date).getId();  // 찾은거를 (reservation.getId)리턴한다.
                         } else {
                             return "잔액부족";
                         }

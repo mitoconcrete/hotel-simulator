@@ -13,11 +13,11 @@ public class TaehoonService {
     HotelRepository hotelRepository = new HotelRepository();
 
 
-    public List<Reservation> getReservationNumberList(String userName, String userPhone){
+    public List<Integer> getReservationNumberList(String userName, String userPhone){
         List<Reservation> reservations = reservationRepository.getReservationList();
         return reservations.stream().filter(reservation -> reservation.getUserName().equals(userName)
                                             && reservation.getUserPhone().equals(userPhone))
-                                    .map(reservation -> reservation.getId())
+                                    .map(reservation -> reservation.getRoom().getRoomNo())
                                     .collect(Collectors.toList());
     }
 
