@@ -57,6 +57,15 @@ public class SungjunService {
             }
         }
         return reservationContent;
+
+    public boolean requestReservationCancel(String reservationId){
+        for (Reservation r : reservationRepository.getReservationList()) {
+            if(r.getId().equals(reservationId)){
+                reservationRepository.deleteReservation(r);
+                return true;
+            }
+        }
+        return false;
     }
 
 }
