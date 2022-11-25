@@ -13,8 +13,10 @@ import java.util.List;
 public class SungjunService {
     private HotelRepository hotelRepository = new HotelRepository();
     private ReservationRepository reservationRepository = new ReservationRepository();
+
     public List<Room> getRoomList(String date){
         List<Room> list = new ArrayList<>();
+
         for(int i=0;i<hotelRepository.getRoomList().size();i++){
             list.add(hotelRepository.getRoomList().get(i));
         }
@@ -31,4 +33,20 @@ public class SungjunService {
 
         return list;
     }
+
+    boolean checkDateFormat(String date) {
+        if (date.length() == 10 && date.contains("-")) {
+            date = date.replace("-", "");
+            if (date.length() == 8) {
+                for (int i = 0; i < 8; i++) {
+                    if ((int) date.charAt(i) > 57 || (int) date.charAt(i) < 48) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
