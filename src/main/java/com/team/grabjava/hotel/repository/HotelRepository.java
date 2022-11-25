@@ -12,7 +12,7 @@ public class HotelRepository {
         hotel.setAsset(price);
     }
 
-    public List<Room> getRoom(){
+    public List<Room> getRoomList(){
         return hotel.getRoomList();
     }
 }
