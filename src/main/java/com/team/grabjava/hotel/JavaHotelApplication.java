@@ -106,6 +106,7 @@ public class JavaHotelApplication {
                                     reservationInterface.showSuccessReservationMessage(reservationResponse);
                                     break;
                             }
+                            continue;
                         }
                     case "2":  // 예약번호 조회
                         reservationNumberSearchInterface.startScanner();

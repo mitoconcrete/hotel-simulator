@@ -11,7 +11,7 @@ public class GetAllRervationsInterface {
 
     public void showAllReservationsMessage(List<Reservation> reservations){
         for(Reservation reservation: reservations){
-            System.out.println(reservation.getId() + " / " + reservation.getRoom().getRoomNo() + " / " + reservation.getUserName() + " / " + reservation.getUserPhone() + " / " + reservation.getReservationDate());
+            System.out.println(reservation.getReservationId() + " / " + reservation.getRoom().getRoomNo() + " / " + reservation.getUserName() + " / " + reservation.getUserPhone() + " / " + reservation.getReservationDate());
         }
     }
 
