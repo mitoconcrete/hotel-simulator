@@ -2,11 +2,9 @@ package com.team.grabjava.hotel.repository;
 
 import com.team.grabjava.hotel.entity.Reservation;
 import com.team.grabjava.hotel.entity.Room;
-import com.team.grabjava.hotel.entity.User;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class ReservationRepository {
     // 예약 리스트

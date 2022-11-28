@@ -3,11 +3,9 @@ package com.team.grabjava.hotel;
 import com.team.grabjava.hotel.entity.Reservation;
 import com.team.grabjava.hotel.entity.Room;
 import com.team.grabjava.hotel.presentation.*;
-import com.team.grabjava.hotel.repository.ReservationRepository;
 import com.team.grabjava.hotel.service.HotelService;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Scanner;
 
 public class JavaHotelApplication {

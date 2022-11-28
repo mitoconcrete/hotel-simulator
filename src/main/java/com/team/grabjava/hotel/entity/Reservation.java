@@ -3,7 +3,6 @@ package com.team.grabjava.hotel.entity;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.UUID;
 
 public class Reservation {
