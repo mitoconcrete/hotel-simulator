@@ -16,6 +16,7 @@ public class SelectServiceInterface {
 
     public void showSelectableHiddenMenu(){
         System.out.println("3. 호텔의 모든 예약내역 조회");
+        System.out.println("4. 호텔보유금 내역 조회");
     }
 
     public void showSelectNumberInputMessage(){

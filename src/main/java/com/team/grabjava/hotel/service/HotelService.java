@@ -29,7 +29,9 @@ public class HotelService {
                             // id를 받아와야됨 -> reservationRapository에서 reservation list를 for문으로 돌리고, if문으로 이름번호 같은애(다른거도 비교해야하나 생각해보기) 뽑아서 같은거의 id값을 찾는다.
                             int updateUserAsset = user.getUserAsset() - room.getPrice();
                             user.setUserAsset(updateUserAsset);
-                            return reservationRepository.createReservation(room, userName, userPhone, date).getReservationId();  // 찾은거를 (reservation.getId)리턴한다.
+                            Reservation reservation = reservationRepository.createReservation(room, userName, userPhone, date);
+                            updateHotelAsset(reservation.getRoom().getPrice());
+                            return reservation.getReservationId();  // 찾은거를 (reservation.getId)리턴한다.
                         } else {
                             return "잔액부족";
                         }
@@ -101,8 +103,10 @@ public class HotelService {
 
     public String getReservationContent(String reservationId) {
         StringBuilder reservationContent = new StringBuilder();
+
         for (Reservation r : reservationRepository.getReservationList()) {
             if (r.getReservationId().equals(reservationId)) {
+
                 reservationContent.append(r.getReservationId()).append(" / ").append(r.getReservationDate()).append(" / ").append(r.getRoom().getSize()).append("평");
             }
         }
@@ -143,5 +147,9 @@ public class HotelService {
 
     public List<Reservation> getHotelReservationList(){
         return reservationRepository.getReservationList();
+    }
+
+    public int getHotelAsset(){
+        return hotelRepository.getAsset();
     }
 }

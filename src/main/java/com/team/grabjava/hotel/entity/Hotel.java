@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Hotel {
     private final int INITIAL_ROOM_COUNT = 15;
-    private final int INIITAL_HOTEL_ASSSET = 1_000_000;
+    private final int INIITAL_HOTEL_ASSSET = 100_000;
     private List<Room> roomList = new ArrayList<>();
     private int hotelAsset;
 

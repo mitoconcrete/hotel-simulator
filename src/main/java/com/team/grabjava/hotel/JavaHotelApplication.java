@@ -59,6 +59,11 @@ public class JavaHotelApplication {
                             }
                             isAdminMode = false;
                             continue;
+                        }else if(isAdminMode && startMenuSelectCommand.equals("4")){
+                            int hotelCurrentAsset = hotelService.getHotelAsset();
+                            hotelInterface.showHotelAssetMessage(hotelCurrentAsset);
+                            isAdminMode = false;
+                            continue;
                         }else{
                             isAdminMode = hotelService.checkAdminPassword(startMenuSelectCommand);
                             if(!isAdminMode){
