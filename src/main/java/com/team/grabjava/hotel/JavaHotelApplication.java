@@ -1,9 +1,11 @@
 package com.team.grabjava.hotel;
 
+import com.team.grabjava.hotel.entity.Room;
 import com.team.grabjava.hotel.presentation.*;
 import com.team.grabjava.hotel.repository.ReservationRepository;
 import com.team.grabjava.hotel.service.HotelService;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -41,8 +43,8 @@ public class JavaHotelApplication {
             // 2. 전화번호를 입력받는다. 만약, 잘못된 전화번호를 입력했다면, 다시 처음으로 돌아간다.
             userInfoInterface.showInputUserPhoneMessage();
             String userPhone = input.nextLine();
-            boolean isValidatePhoneNumber = hotelService.phoneNumberValidation(userPhone);
-            if(!isValidatePhoneNumber) {
+            boolean isValidPhoneNumber = hotelService.phoneNumberValidation(userPhone);
+            if(!isValidPhoneNumber) {
                 phoneNumberValidationErrorInterface.showPhoneNumberValidationError();
                 continue;
             }
@@ -65,6 +67,58 @@ public class JavaHotelApplication {
                 hotelService.updateUserAssetService(userName, userPhone, userAsset);
             }else{
                 hotelService.createUserService(userName, userPhone, userAsset);
+            }
+
+            // 5. 서비스 선택
+            while (true){
+                selectServiceInterface.startScanner();
+                String selectInput = input.nextLine();
+                switch (selectInput){
+                    case "1":  // 예약
+                        reservationInterface.startScanner();
+                        String reservationRequestDate = input.nextLine();
+                        boolean isValidDate = hotelService.checkDateFormat(reservationRequestDate);
+                        if(!isValidDate){
+                            reservationInterface.showOutOfDateRangeMessage();
+                            continue;
+                        }
+                        List<Room> roomList = hotelService.getReservationableRoomList(reservationRequestDate);
+                        if(roomList.size() == 0){
+                            reservationInterface.showNoEmptyRoomMessage();
+                        }else{
+                            reservationInterface.showHasEmptyRoomMessage(roomList);
+                            int selectedRoomNo;
+                            try {
+                                selectedRoomNo = Integer.parseInt(input.nextLine());
+                            }catch(NumberFormatException e){
+                                continue;
+                            }
+                            String reservationResponse = hotelService.requestReservation(selectedRoomNo, userName, userPhone, reservationRequestDate);
+                            switch (reservationResponse){
+                                case "잔액부족":
+                                    reservationInterface.showNoMoneyReservationMessage();
+                                    continue;
+                                case "예약실패":
+                                    reservationInterface.showAlreadyReservationMessage();
+                                    continue;
+                                default:
+                                    reservationInterface.showSuccessReservationMessage(reservationResponse);
+                                    break;
+
+                            }
+                        }
+                        break;
+                    case "2":  // 예약번호 조회
+                        break;
+                    case "3":  // 예약내역 조회
+                        break;
+                    case "4":  // 예약 취소
+                        break;
+                    case "5":  // 모든 예약내역 조회
+                        break;
+                    default:
+                        continue;
+                }
             }
         }
     }
