@@ -6,6 +6,8 @@ import com.team.grabjava.hotel.entity.Room;
 import com.team.grabjava.hotel.repository.HotelRepository;
 import com.team.grabjava.hotel.repository.ReservationRepository;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,8 +37,16 @@ public class SungjunService {
         return list;
     }
 
-    public boolean checkDateFormat(String date) {
-        return Pattern.matches("^20\\d{2}-(?:0[0-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-9]|3[0-1])$", date);
+    boolean checkDateFormat(String date) {
+        try {
+            SimpleDateFormat dateFormatParser = new SimpleDateFormat("yyyy-MM-dd");
+            dateFormatParser.setLenient(false);
+            dateFormatParser.parse(date);
+            return LocalDate.now().isBefore(LocalDate.parse(date)) && LocalDate.now().plusDays(7).isAfter(LocalDate.parse(date));
+        } catch (Exception e) {
+            return false;
+        }
+
     }
 
     public String getReservationContent(String reservationId) {
