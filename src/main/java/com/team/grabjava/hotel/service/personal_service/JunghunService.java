@@ -1,4 +1,4 @@
-package com.team.grabjava.hotel.service.personal_service;
-
-public class JunghunService {
-}
+//package com.team.grabjava.hotel.service.personal_service;
+//
+//public class JunghunService {
+//}
