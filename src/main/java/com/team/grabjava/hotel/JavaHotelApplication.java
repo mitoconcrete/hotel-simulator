@@ -144,7 +144,33 @@ public class JavaHotelApplication {
                         }
                         continue;
                     case "4":  // 예약 취소
-                        break;
+                        reservationCancelInterface.startScanner();
+                        searchReservationId = input.nextLine();
+                        reservationSearchResponse = hotelService.getReservationContent(searchReservationId);
+                        if(reservationSearchResponse.equals("")){
+                            reservationCancelInterface.showNotExistReservationMessage();
+                            continue;
+                        }else{
+                            reservationCancelInterface.showReservationInfoMessage(reservationSearchResponse);
+                        }
+
+                        String cancelConfirmCommand = input.nextLine();
+                        switch (cancelConfirmCommand){
+                            case "Y":
+                                boolean cancelReservationResponse =  hotelService.requestReservationCancel(searchReservationId);
+                                if (cancelReservationResponse){
+                                    reservationCancelInterface.showSuccessCancelReservationMessage();
+                                }else{
+                                    reservationCancelInterface.showFailCancelReservationMessage();
+                                }
+                                break;
+                            case "N":
+                                reservationCancelInterface.showFailCancelReservationMessage();
+                                break;
+                            default:
+                                reservationCancelInterface.showCommandErrorMessage();
+                        }
+                        continue;
                     case "5":  // 모든 예약내역 조회
                         break;
                     default:

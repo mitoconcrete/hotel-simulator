@@ -7,8 +7,8 @@ public class ReservationCancelInterface {
         System.out.println("예약번호를 입력해주세요 :");
     }
 
-    public void showCancelReservationMessage(Reservation reservation){
-        System.out.println(reservation.getReservationId() + " / " + reservation.getReservationDate() + " / " + reservation.getRoom().getSize() + "평");
+    public void showReservationInfoMessage(String reservationString){
+        System.out.println(reservationString);
         System.out.println("정말로 예약을 취소하시겠습니까? (Y/N)");
     }
 
@@ -17,7 +17,7 @@ public class ReservationCancelInterface {
     }
 
     public void showFailCancelReservationMessage(){
-        System.out.println("예약에 실패하였습니다.");
+        System.out.println("예약취소에 실패하였습니다.");
         System.out.println("이전메뉴로 되돌아갑니다.");
     }
 
@@ -26,7 +26,7 @@ public class ReservationCancelInterface {
         System.out.println("이전메뉴로 되돌아갑니다.");
     }
 
-    public void showInvalidReservationIdMessage(){
+    public void showNotExistReservationMessage(){
         System.out.println("예약번호에 해당되는 내역이 없습니다.");
     }
 }
