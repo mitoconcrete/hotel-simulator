@@ -37,4 +37,8 @@ public class ReservationInterface {
     public void showAlreadyReservationMessage(){
         System.out.println("이미 예약된 객실입니다. 예약에 실패했습니다.");
     }
+
+    public void reservationExistForSearch(Reservation reservation){
+        System.out.println(reservation.getId() + " / " + reservation.getReservationDate() + " / " + reservation.getRoom().getSize() + "평");
+    }       // 예약 내역 조회 -> 예약 내역 존재일 경우
 }
