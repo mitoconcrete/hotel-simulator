@@ -7,9 +7,9 @@ public class ReservationSearchInterface {
         System.out.println("예약번호를 입력해주세요 :");
     }
 
-    public void showReservationInfoMessage(Reservation reservation){
+    public void showReservationInfoMessage(String reservationString){
         System.out.println("예약내역");
-        System.out.println(reservation.getReservationId() + " / " + reservation.getReservationDate() + " / " + reservation.getRoom().getSize() + "평");
+        System.out.println(reservationString);
     }
 
     public void showNotExistReservationMessage(){

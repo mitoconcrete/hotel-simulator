@@ -18,6 +18,7 @@ public class JavaHotelApplication {
         ReservationInterface reservationInterface = new ReservationInterface();
         SelectServiceInterface selectServiceInterface = new SelectServiceInterface();
         GetAllRervationsInterface getAllRervationsInterface = new GetAllRervationsInterface();
+        ReservationSearchInterface reservationSearchInterface = new ReservationSearchInterface();
         ReservationCancelInterface reservationCancelInterface = new ReservationCancelInterface();
         ReservationNumberSearchInterface reservationNumberSearchInterface = new ReservationNumberSearchInterface();
         PhoneNumberValidationErrorInterface phoneNumberValidationErrorInterface = new PhoneNumberValidationErrorInterface();
@@ -133,13 +134,21 @@ public class JavaHotelApplication {
                         }
                         continue;
                     case "3":  // 예약내역 조회
-                        break;
+                        reservationSearchInterface.startScanner();
+                        String searchReservationId = input.nextLine();
+                        String reservationSearchResponse = hotelService.getReservationContent(searchReservationId);
+                        if(reservationSearchResponse.equals("")){
+                            reservationSearchInterface.showNotExistReservationMessage();
+                        }else{
+                            reservationSearchInterface.showReservationInfoMessage(reservationSearchResponse);
+                        }
+                        continue;
                     case "4":  // 예약 취소
                         break;
                     case "5":  // 모든 예약내역 조회
                         break;
                     default:
-                        continue;
+                        System.out.println("1-5 내의 숫자를 입력해주세요.");
                 }
             }
         }

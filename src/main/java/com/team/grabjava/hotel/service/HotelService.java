@@ -103,7 +103,7 @@ public class HotelService {
         StringBuilder reservationContent = new StringBuilder();
         for (Reservation r : reservationRepository.getReservationList()) {
             if (r.getReservationId().equals(reservationId)) {
-                reservationContent.append(r.getReservationId()).append(" ").append(r.getReservationDate()).append(" ").append(r.getRoom().getSize());
+                reservationContent.append(r.getReservationId()).append(" / ").append(r.getReservationDate()).append(" / ").append(r.getRoom().getSize()).append("평");
             }
         }
         return reservationContent.toString();
