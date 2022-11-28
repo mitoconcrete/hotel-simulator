@@ -35,11 +35,9 @@ public class HotelService {
                         }
                     }
                 }
-            } else {
-                return "예약실패";
             }
         }
-        return "까꿍";
+        return "예약실패";
     }
 
     public boolean isFindUserService(String userName, String userPhone) {
@@ -88,12 +86,13 @@ public class HotelService {
     }
 
 
-    boolean checkDateFormat(String date) {
+    public boolean checkDateFormat(String date) {
         try {
             SimpleDateFormat dateFormatParser = new SimpleDateFormat("yyyy-MM-dd");
             dateFormatParser.setLenient(false);
             dateFormatParser.parse(date);
-            return LocalDate.now().isBefore(LocalDate.parse(date)) && LocalDate.now().plusDays(7).isAfter(LocalDate.parse(date));
+            // 날짜가 같거나, 7일내에 있거나
+            return LocalDate.now().compareTo(LocalDate.parse(date)) <= 0 &&  LocalDate.now().plusDays(7).isAfter(LocalDate.parse(date));
         } catch (Exception e) {
             return false;
         }
