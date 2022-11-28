@@ -23,7 +23,7 @@ public class ReservationInterface {
 
     public void showHasEmptyRoomMessage(List<Room> roomList){
         for(Room room : roomList){
-            System.out.println(room.getRoomNo() + " / " + room.getRoomSize()+"평" + " / " + room.getRoomPrice() + "원");
+            System.out.println(room.getRoomNo() + " / " + room.getSize()+"평" + " / " + room.getPrice() + "원");
         }
         System.out.println("예약을 원하시는 객실의 번호를 입력해주세요. :");
     }
