@@ -141,11 +141,7 @@ public class HotelService {
         return hotelRepository.getAsset();
     }
 
-    public List<Reservation> getReservationList(String userName, String userPhone){
-        List<Reservation> reservations = reservationRepository.getReservationList();
-        return reservations.stream().filter(reservation -> reservation.getUserName().equals(userName)
-                        && reservation.getUserPhone().equals(userPhone))
-                .collect(Collectors.toList());
-
+    public List<Reservation> getHotelReservationList(){
+        return reservationRepository.getReservationList();
     }
 }

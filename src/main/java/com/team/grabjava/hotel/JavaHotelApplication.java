@@ -30,7 +30,45 @@ public class JavaHotelApplication {
         Scanner input = new Scanner(System.in);
 
         // Programs
-        while(true){
+        exit : while(true){
+            boolean isAdminMode = false;
+            boolean isInStartMenu = true;
+
+            while (isInStartMenu){
+                selectServiceInterface.showSelectableStartMenu();
+                if(isAdminMode){
+                    selectServiceInterface.showSelectableHiddenMenu();
+                }
+                selectServiceInterface.showSelectNumberInputMessage();
+                String startMenuSelectCommand = input.nextLine();
+                switch (startMenuSelectCommand){
+                    case "1":
+                        isInStartMenu = false;
+                        break;
+                    case "2":
+                        System.out.println("시스템을 종료합니다.");
+                        System.exit(0);
+                        break;
+                    default:
+                        if(isAdminMode && startMenuSelectCommand.equals("3")){
+                            List<Reservation> reservationList = hotelService.getHotelReservationList();
+                            if(reservationList.size() == 0){
+                                getAllRervationsInterface.showNotExistReservationsMessage();
+                            }else{
+                                getAllRervationsInterface.showAllReservationsMessage(reservationList);
+                            }
+                            isAdminMode = false;
+                            continue;
+                        }else{
+                            isAdminMode = hotelService.checkAdminPassword(startMenuSelectCommand);
+                            if(!isAdminMode){
+                                System.out.println("잘못된 커멘드입니다.");
+                            }
+                        }
+                    break;
+                }
+            }
+
             // 1. 유저 정보를 입력받는다.
             userInfoInterface.startScanner();
 
@@ -73,7 +111,8 @@ public class JavaHotelApplication {
 
             // 5. 서비스 선택
             while (true){
-                selectServiceInterface.startScanner();
+                selectServiceInterface.showSelectableMainMenu();
+                selectServiceInterface.showSelectNumberInputMessage();
                 String selectInput = input.nextLine();
                 switch (selectInput){
                     case "1":  // 예약
@@ -171,8 +210,9 @@ public class JavaHotelApplication {
                                 reservationCancelInterface.showCommandErrorMessage();
                         }
                         continue;
-                    case "5":  // 모든 예약내역 조회
-                        break;
+                    case "5":  // 호텔 나가기
+                        System.out.println("호텔에서 퇴장합니다. 안녕히가세요:)");
+                        continue exit;
                     default:
                         System.out.println("1-5 내의 숫자를 입력해주세요.");
                 }
