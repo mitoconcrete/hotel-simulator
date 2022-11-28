@@ -3,6 +3,7 @@ package com.team.grabjava.hotel.presentation;
 import com.team.grabjava.hotel.entity.Reservation;
 import com.team.grabjava.hotel.entity.Room;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class ReservationInterface {
@@ -11,7 +12,9 @@ public class ReservationInterface {
     }
 
     public void showOutOfDateRangeMessage(){
-        System.out.println("예약 범위가 아닙니다. 0000/00/00 ~ 0000/00/00 내의 날짜를 입력해주세요. :");
+        String startDate = LocalDate.now().toString();
+        String endDate = LocalDate.now().plusDays(6).toString();
+        System.out.println("예약 범위가 아닙니다." + startDate + "~" + endDate + "내의 날짜를 입력해주세요. :");
     }
 
     public void showNoEmptyRoomMessage(){
@@ -20,7 +23,7 @@ public class ReservationInterface {
 
     public void showHasEmptyRoomMessage(List<Room> roomList){
         for(Room room : roomList){
-            System.out.println(room.getRoomNo() + " / " + room.getRoomSize()+"평" + " / " + room.getRoomPrice() + "원");
+            System.out.println(room.getRoomNo() + " / " + room.getSize()+"평" + " / " + room.getPrice() + "원");
         }
         System.out.println("예약을 원하시는 객실의 번호를 입력해주세요. :");
     }

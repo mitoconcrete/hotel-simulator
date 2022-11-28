@@ -30,7 +30,4 @@ public class ReservationRepository {
     public void deleteReservation(Reservation reservation){
         reservationList.remove(reservation);
     }
-
-
-
 }

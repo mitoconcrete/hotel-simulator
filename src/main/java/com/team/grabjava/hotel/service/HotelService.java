@@ -29,17 +29,17 @@ public class HotelService {
                             // id를 받아와야됨 -> reservationRapository에서 reservation list를 for문으로 돌리고, if문으로 이름번호 같은애(다른거도 비교해야하나 생각해보기) 뽑아서 같은거의 id값을 찾는다.
                             int updateUserAsset = user.getUserAsset() - room.getPrice();
                             user.setUserAsset(updateUserAsset);
-                            return reservationRepository.createReservation(room, userName, userPhone, date).getId();  // 찾은거를 (reservation.getId)리턴한다.
+                            Reservation reservation = reservationRepository.createReservation(room, userName, userPhone, date);
+                            updateHotelAsset(reservation.getRoom().getPrice());
+                            return reservation.getReservationId();  // 찾은거를 (reservation.getId)리턴한다.
                         } else {
                             return "잔액부족";
                         }
                     }
                 }
-            } else {
-                return "예약실패";
             }
         }
-        return "까꿍";
+        return "예약실패";
     }
 
     public boolean isFindUserService(String userName, String userPhone) {
@@ -88,12 +88,13 @@ public class HotelService {
     }
 
 
-    boolean checkDateFormat(String date) {
+    public boolean checkDateFormat(String date) {
         try {
             SimpleDateFormat dateFormatParser = new SimpleDateFormat("yyyy-MM-dd");
             dateFormatParser.setLenient(false);
             dateFormatParser.parse(date);
-            return LocalDate.now().isBefore(LocalDate.parse(date)) && LocalDate.now().plusDays(7).isAfter(LocalDate.parse(date));
+            // 날짜가 같거나, 7일내에 있거나
+            return LocalDate.now().compareTo(LocalDate.parse(date)) <= 0 &&  LocalDate.now().plusDays(7).isAfter(LocalDate.parse(date));
         } catch (Exception e) {
             return false;
         }
@@ -101,18 +102,20 @@ public class HotelService {
     }
 
     public String getReservationContent(String reservationId) {
-        String reservationContent = "";
+        StringBuilder reservationContent = new StringBuilder();
+
         for (Reservation r : reservationRepository.getReservationList()) {
-            if (r.getId().equals(reservationId)) {
-                reservationContent += r.getId() + " " + r.getReservationDate() + " " + r.getRoom().getSize();
+            if (r.getReservationId().equals(reservationId)) {
+
+                reservationContent.append(r.getReservationId()).append(" / ").append(r.getReservationDate()).append(" / ").append(r.getRoom().getSize()).append("평");
             }
         }
-        return reservationContent;
+        return reservationContent.toString();
     }
 
     public boolean requestReservationCancel(String reservationId){
         for (Reservation r : reservationRepository.getReservationList()) {
-            if(r.getId().equals(reservationId)){
+            if(r.getReservationId().equals(reservationId)){
                 reservationRepository.deleteReservation(r);
                 return true;
             }
@@ -124,11 +127,11 @@ public class HotelService {
         return Pattern.matches("^01(?:0|1|[6-9])-\\d{4}-\\d{4}$", phoneNumber);
     }
 
-    public List<Integer> getReservationNumberList(String userName, String userPhone){
+    public List<String> getReservationIdList(String userName, String userPhone){
         List<Reservation> reservations = reservationRepository.getReservationList();
         return reservations.stream().filter(reservation -> reservation.getUserName().equals(userName)
                         && reservation.getUserPhone().equals(userPhone))
-                .map(reservation -> reservation.getRoom().getRoomNo())
+                .map(Reservation::getReservationId)
                 .collect(Collectors.toList());
     }
 
@@ -142,11 +145,11 @@ public class HotelService {
         return hotelRepository.getAsset();
     }
 
-    public List<Reservation> getReservationList(String userName, String userPhone){
-        List<Reservation> reservations = reservationRepository.getReservationList();
-        return reservations.stream().filter(reservation -> reservation.getUserName().equals(userName)
-                        && reservation.getUserPhone().equals(userPhone))
-                .collect(Collectors.toList());
+    public List<Reservation> getHotelReservationList(){
+        return reservationRepository.getReservationList();
+    }
 
+    public int getHotelAsset(){
+        return hotelRepository.getAsset();
     }
 }
