@@ -19,3 +19,4 @@ public class UserInfoInterface {
         System.out.println("소지금 :");
     }
 }
+
