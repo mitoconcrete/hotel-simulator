@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.UUID;
 
 public class Reservation {
-    private final String id;
+    private final String reservationId;
     // 예약 번호
     private Room room;                 // 객실 번호
     private String userName;            // 고객 이름
@@ -15,15 +15,15 @@ public class Reservation {
     private String reservationDate;       // 예약 날짜
 
     public Reservation(Room room, String userName, String userPhone, String reservationDate) {
-        this.id = UUID.randomUUID().toString();
+        this.reservationId = UUID.randomUUID().toString();
         this.room = room;
         this.userName = userName;
         this.userPhone = userPhone;
         this.reservationDate = ZonedDateTime.now(ZoneId.of("+9")).format(DateTimeFormatter.ofPattern(reservationDate+"'T'HH:mm:ssz"));
     }
 
-    public String getId() {
-        return id;
+    public String getReservationId() {
+        return reservationId;
     }
 
     public Room getRoom() {

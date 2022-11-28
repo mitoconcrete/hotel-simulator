@@ -8,7 +8,7 @@ public class ReservationCancelInterface {
     }
 
     public void showCancelReservationMessage(Reservation reservation){
-        System.out.println(reservation.getId() + " / " + reservation.getReservationDate() + " / " + reservation.getRoom().getSize() + "평");
+        System.out.println(reservation.getReservationId() + " / " + reservation.getReservationDate() + " / " + reservation.getRoom().getSize() + "평");
         System.out.println("정말로 예약을 취소하시겠습니까? (Y/N)");
     }
 

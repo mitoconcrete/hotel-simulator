@@ -1,5 +1,6 @@
 package com.team.grabjava.hotel;
 
+import com.team.grabjava.hotel.entity.Reservation;
 import com.team.grabjava.hotel.entity.Room;
 import com.team.grabjava.hotel.presentation.*;
 import com.team.grabjava.hotel.repository.ReservationRepository;
@@ -104,12 +105,32 @@ public class JavaHotelApplication {
                                 default:
                                     reservationInterface.showSuccessReservationMessage(reservationResponse);
                                     break;
-
                             }
                         }
-                        break;
                     case "2":  // 예약번호 조회
-                        break;
+                        reservationNumberSearchInterface.startScanner();
+                        userInfoInterface.showInputUserNameMessage();
+                        String searchUserName = input.nextLine();
+                        if(searchUserName.equals("")){
+                            System.out.println("이름은 공백이 될 수 없습니다.");
+                            continue;
+                        }
+
+                        userInfoInterface.showInputUserPhoneMessage();
+                        String searchUserPhone = input.nextLine();
+                        isValidPhoneNumber = hotelService.phoneNumberValidation(searchUserPhone);
+                        if(!isValidPhoneNumber) {
+                            phoneNumberValidationErrorInterface.showPhoneNumberValidationError();
+                            continue;
+                        }
+
+                        List<String> reservationIdList = hotelService.getReservationIdList(searchUserName, searchUserPhone);
+                        if(reservationIdList.size() == 0){
+                            reservationNumberSearchInterface.showNotExistReservationIdMessage();
+                        }else {
+                            reservationNumberSearchInterface.showExistReservationIdListMessage(reservationIdList);
+                        }
+                        continue;
                     case "3":  // 예약내역 조회
                         break;
                     case "4":  // 예약 취소
