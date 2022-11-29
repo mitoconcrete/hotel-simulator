@@ -19,7 +19,7 @@ public class HotelService {
     ReservationRepository reservationRepository = new ReservationRepository();
     UserRepository userRepository = new UserRepository();
 
-    // 1. Get Service
+    // 1. GET Service
     public List<Reservation> getHotelReservationList(){
         return reservationRepository.getReservationList();
     }
@@ -90,10 +90,12 @@ public class HotelService {
                 .collect(Collectors.toList());
     }
 
+    // 2. POST Service
     public void postNewUser(String userName, String userPhone, int userAsset) {
         userRepository.createUser(userName, userPhone, userAsset);
     }
 
+    // 3. PUT Service
     public void putUserAsset(String userName, String userPhone, int userAsset) {
         for (User user : userRepository.getUserList()) {
             // 이름, 전화번호가 모두 일치하는 유저리스트가 있다면
@@ -110,6 +112,7 @@ public class HotelService {
         hotelRepository.getAsset();
     }
 
+    // 4. DELETE Service
     public boolean deleteReservationById(String reservationId){
         for (Reservation r : reservationRepository.getReservationList()) {
             if(r.getReservationId().equals(reservationId)){
@@ -119,6 +122,8 @@ public class HotelService {
         }
         return false;
     }
+
+    // 5. Validation Service
     public boolean validateUserDataInDB(String userName, String userPhone) {
         for (User user : userRepository.getUserList()) {
             if (userName.equals(user.getUserName()) && userPhone.equals(user.getUserPhone())) {
