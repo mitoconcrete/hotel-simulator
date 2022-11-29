@@ -19,8 +19,17 @@ public class HotelService {
     ReservationRepository reservationRepository = new ReservationRepository();
     UserRepository userRepository = new UserRepository();
 
+    // 1. GET Service
+    public List<Reservation> getHotelReservationList(){
+        return reservationRepository.getReservationList();
+    }
+
+    public int getHotelAsset(){
+        return hotelRepository.getAsset();
+    }
+
     public String requestReservation(int roomNo, String userName, String userPhone, String date) {
-        for (Room room : getReservationableRoomList(date)) {         // ReservationList - list에서 해당 date에 예약 가능한 방정보를 모두 불러온다.       사용방법 잘못됨 -> 이유알면 date쓰는이유도 알게됨
+        for (Room room : getBookableRoomList(date)) {         // ReservationList - list에서 해당 date에 예약 가능한 방정보를 모두 불러온다.       사용방법 잘못됨 -> 이유알면 date쓰는이유도 알게됨
             if (room.getRoomNo() == roomNo) {                              // 그 중에 roomNo와 일치하는 room list가 있다면
                 for (User user : userRepository.getUserList()) {
                     if (user.getUserName().equals(userName) && user.getUserPhone().equals(userPhone)) {
@@ -30,7 +39,7 @@ public class HotelService {
                             int updateUserAsset = user.getUserAsset() - room.getPrice();
                             user.setUserAsset(updateUserAsset);
                             Reservation reservation = reservationRepository.createReservation(room, userName, userPhone, date);
-                            updateHotelAsset(reservation.getRoom().getPrice());
+                            putHotelAsset(reservation.getRoom().getPrice());
                             return reservation.getReservationId();  // 찾은거를 (reservation.getId)리턴한다.
                         } else {
                             return "잔액부족";
@@ -42,32 +51,7 @@ public class HotelService {
         return "예약실패";
     }
 
-    public boolean isFindUserService(String userName, String userPhone) {
-        for (User user : userRepository.getUserList()) {
-            if (userName.equals(user.getUserName()) && userPhone.equals(user.getUserPhone())) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public void createUserService(String userName, String userPhone, int userAsset) {
-        userRepository.createUser(userName, userPhone, userAsset);
-    }
-
-    public void updateUserAssetService(String userName, String userPhone, int userAsset) {
-        for (User user : userRepository.getUserList()) {
-            // 이름, 전화번호가 모두 일치하는 유저리스트가 있다면
-            if (userName.equals(user.getUserName()) && userPhone.equals(user.getUserPhone())) {
-                // 유저리스트 의 소지금을 변경하는 매서드를 실행해라.
-                userRepository.setAsset(user, userAsset);
-                return;
-            }
-        }
-    }
-
-    public List<Room> getReservationableRoomList(String date){
+    public List<Room> getBookableRoomList(String date){
         List<Room> list = new ArrayList<>();
 
         for(int i=0;i<hotelRepository.getRoomList().size();i++){
@@ -83,22 +67,7 @@ public class HotelService {
                 }
             }
         }
-
         return list;
-    }
-
-
-    public boolean checkDateFormat(String date) {
-        try {
-            SimpleDateFormat dateFormatParser = new SimpleDateFormat("yyyy-MM-dd");
-            dateFormatParser.setLenient(false);
-            dateFormatParser.parse(date);
-            // 날짜가 같거나, 7일내에 있거나
-            return LocalDate.now().compareTo(LocalDate.parse(date)) <= 0 &&  LocalDate.now().plusDays(7).isAfter(LocalDate.parse(date));
-        } catch (Exception e) {
-            return false;
-        }
-
     }
 
     public String getReservationContent(String reservationId) {
@@ -113,7 +82,38 @@ public class HotelService {
         return reservationContent.toString();
     }
 
-    public boolean requestReservationCancel(String reservationId){
+    public List<String> getReservationIdList(String userName, String userPhone){
+        List<Reservation> reservations = reservationRepository.getReservationList();
+        return reservations.stream().filter(reservation -> reservation.getUserName().equals(userName)
+                        && reservation.getUserPhone().equals(userPhone))
+                .map(Reservation::getReservationId)
+                .collect(Collectors.toList());
+    }
+
+    // 2. POST Service
+    public void postNewUser(String userName, String userPhone, int userAsset) {
+        userRepository.createUser(userName, userPhone, userAsset);
+    }
+
+    // 3. PUT Service
+    public void putUserAsset(String userName, String userPhone, int userAsset) {
+        for (User user : userRepository.getUserList()) {
+            // 이름, 전화번호가 모두 일치하는 유저리스트가 있다면
+            if (userName.equals(user.getUserName()) && userPhone.equals(user.getUserPhone())) {
+                // 유저리스트 의 소지금을 변경하는 매서드를 실행해라.
+                userRepository.setAsset(user, userAsset);
+                return;
+            }
+        }
+    }
+
+    public void putHotelAsset(int userAsset){
+        hotelRepository.setAsset(userAsset);
+        hotelRepository.getAsset();
+    }
+
+    // 4. DELETE Service
+    public boolean deleteReservationById(String reservationId){
         for (Reservation r : reservationRepository.getReservationList()) {
             if(r.getReservationId().equals(reservationId)){
                 reservationRepository.deleteReservation(r);
@@ -123,33 +123,32 @@ public class HotelService {
         return false;
     }
 
-    public boolean phoneNumberValidation(String phoneNumber){
+    // 5. Validation Service
+    public boolean validateUserDataInDB(String userName, String userPhone) {
+        for (User user : userRepository.getUserList()) {
+            if (userName.equals(user.getUserName()) && userPhone.equals(user.getUserPhone())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+    public boolean validateDateFormat(String date) {
+        try {
+            SimpleDateFormat dateFormatParser = new SimpleDateFormat("yyyy-MM-dd");
+            dateFormatParser.setLenient(false);
+            dateFormatParser.parse(date);
+            // 날짜가 같거나, 7일내에 있거나
+            return LocalDate.now().compareTo(LocalDate.parse(date)) <= 0 &&  LocalDate.now().plusDays(7).isAfter(LocalDate.parse(date));
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    public boolean validatePhoneNumber(String phoneNumber){
         return Pattern.matches("^01(?:0|1|[6-9])-\\d{4}-\\d{4}$", phoneNumber);
     }
 
-    public List<String> getReservationIdList(String userName, String userPhone){
-        List<Reservation> reservations = reservationRepository.getReservationList();
-        return reservations.stream().filter(reservation -> reservation.getUserName().equals(userName)
-                        && reservation.getUserPhone().equals(userPhone))
-                .map(Reservation::getReservationId)
-                .collect(Collectors.toList());
-    }
-
-    public boolean checkAdminPassword(String password){
-        final String adminPassword = "password";
-        return adminPassword.equals(password);
-    }
-
-    public int updateHotelAsset(int userAsset){
-        hotelRepository.setAsset(userAsset);
-        return hotelRepository.getAsset();
-    }
-
-    public List<Reservation> getHotelReservationList(){
-        return reservationRepository.getReservationList();
-    }
-
-    public int getHotelAsset(){
-        return hotelRepository.getAsset();
+    public boolean validateAdminPassword(String password){
+        return hotelRepository.getAdminPassword().equals(password);
     }
 }

@@ -3,25 +3,30 @@ package com.team.grabjava.hotel;
 import com.team.grabjava.hotel.entity.Reservation;
 import com.team.grabjava.hotel.entity.Room;
 import com.team.grabjava.hotel.presentation.*;
-import com.team.grabjava.hotel.repository.ReservationRepository;
 import com.team.grabjava.hotel.service.HotelService;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Scanner;
 
 public class JavaHotelApplication {
     public static void main(String[] args) {
         // Interface
-        HotelInterface hotelInterface = new HotelInterface();
-        UserInfoInterface userInfoInterface = new UserInfoInterface();
-        ReservationInterface reservationInterface = new ReservationInterface();
-        SelectServiceInterface selectServiceInterface = new SelectServiceInterface();
-        GetAllRervationsInterface getAllRervationsInterface = new GetAllRervationsInterface();
-        ReservationSearchInterface reservationSearchInterface = new ReservationSearchInterface();
-        ReservationCancelInterface reservationCancelInterface = new ReservationCancelInterface();
-        ReservationNumberSearchInterface reservationNumberSearchInterface = new ReservationNumberSearchInterface();
-        PhoneNumberValidationErrorInterface phoneNumberValidationErrorInterface = new PhoneNumberValidationErrorInterface();
+        SystemLogPresentation systemLogPresentation = new SystemLogPresentation();
+        ApplicationLogPresentation applicationLogPresentation = new ApplicationLogPresentation();
+
+        SimpleLogPresentation simpleLogPresentation = new SimpleLogPresentation();
+
+        FailResultLogPresentation failResultLogPresentation = new FailResultLogPresentation();
+        SuccessResultLogPresentation successResultLogPresentation = new SuccessResultLogPresentation();
+
+        NotExistLogPresentation notExistLogPresentation = new NotExistLogPresentation();
+        NotMatchLogPresentation notMatchLogPresentation = new NotMatchLogPresentation();
+
+        RequestInputLogPresentation requestInputLogPresentation = new RequestInputLogPresentation();
+        SelectableMenuLogPresentation selectableMenuLogPresentation = new SelectableMenuLogPresentation();
+        GetServiceResponseLogPresentation getServiceResponseLogPresentation = new GetServiceResponseLogPresentation();
+
+
 
         // Service
         HotelService hotelService = new HotelService();
@@ -29,197 +34,211 @@ public class JavaHotelApplication {
         // Scanner
         Scanner input = new Scanner(System.in);
 
-        // Programs
-        exit : while(true){
+        // Program
+        returnToStartMenu : while(true){
             boolean isAdminMode = false;
             boolean isInStartMenu = true;
 
+            // 시작메뉴 + (관리자메뉴)
             while (isInStartMenu){
-                selectServiceInterface.showSelectableStartMenu();
+                selectableMenuLogPresentation.showSelectableStartMenu();
                 if(isAdminMode){
-                    selectServiceInterface.showSelectableHiddenMenu();
+                    selectableMenuLogPresentation.showSelectableHiddenMenu();
                 }
-                selectServiceInterface.showSelectNumberInputMessage();
+                requestInputLogPresentation.showRequestMenuNumberMessage();
                 String startMenuSelectCommand = input.nextLine();
                 switch (startMenuSelectCommand){
-                    case "1":
+                    case "1":   // 메인 메뉴. (호텔입장하기)
                         isInStartMenu = false;
                         break;
-                    case "2":
-                        System.out.println("시스템을 종료합니다.");
+                    case "2":   // 시스템 종료.
+                        systemLogPresentation.showSystemExitMessage();
                         System.exit(0);
                         break;
-                    default:
-                        if(isAdminMode && startMenuSelectCommand.equals("3")){
-                            List<Reservation> reservationList = hotelService.getHotelReservationList();
-                            if(reservationList.size() == 0){
-                                getAllRervationsInterface.showNotExistReservationsMessage();
-                            }else{
-                                getAllRervationsInterface.showAllReservationsMessage(reservationList);
-                            }
+                    case "3":  // 관리자모드1. 모든 예약내역 보여주기
+                    case "4":  // 관리자모드2. 호텔 보유자산 보여주기
+                        // 해당 커멘드는 관리자 모드에서만 동작하도록 만들기
+                        if(isAdminMode){
                             isAdminMode = false;
-                            continue;
-                        }else if(isAdminMode && startMenuSelectCommand.equals("4")){
-                            int hotelCurrentAsset = hotelService.getHotelAsset();
-                            hotelInterface.showHotelAssetMessage(hotelCurrentAsset);
-                            isAdminMode = false;
-                            continue;
-                        }else{
-                            isAdminMode = hotelService.checkAdminPassword(startMenuSelectCommand);
-                            if(!isAdminMode){
-                                System.out.println("잘못된 커멘드입니다.");
+                            switch (startMenuSelectCommand){
+                                case "3":
+                                    List<Reservation> reservationList = hotelService.getHotelReservationList();
+                                    if(reservationList.size() == 0){
+                                        notExistLogPresentation.showNotExistReservationMessage();
+                                    }else{
+                                        getServiceResponseLogPresentation.showGetHotelAllReservationList(reservationList);
+                                    }
+                                    continue;
+                                case "4":
+                                    int hotelCurrentAsset = hotelService.getHotelAsset();
+                                    getServiceResponseLogPresentation.showGetHotelAsset(hotelCurrentAsset);
+                                    continue;
                             }
                         }
-                    break;
+                    default:
+                            // 이외 커멘드가 들어오면, 커멘드로 관리자모드 진입여부를 판단하여, 다음사이클에서의 액션을 결정.
+                            isAdminMode = hotelService.validateAdminPassword(startMenuSelectCommand);
+                            if(!isAdminMode){
+                                notMatchLogPresentation.showNotMatchPasswordMessage();
+                            }
                 }
             }
 
-            // 1. 유저 정보를 입력받는다.
-            userInfoInterface.startScanner();
+            // 호텔 입장
+            simpleLogPresentation.showSimpleRequestUserInfoMessage();
 
-            // 1-1. 유저 이름을 입력받는다. 만약 빈 문자열이 넘어오면 처음으로 되돌아간다.
-            userInfoInterface.showInputUserNameMessage();
+            // 유저 정보를 입력 : 이름, 휴대전화번호, 자산
+            requestInputLogPresentation.showRequestUserNameMessage();
             String userName = input.nextLine();
             if(userName.equals("")){
-                System.out.println("이름은 공백이 될 수 없습니다.");
+                notMatchLogPresentation.showNotMatchStringFormatMessage();
                 continue;
             }
 
-            // 2. 전화번호를 입력받는다. 만약, 잘못된 전화번호를 입력했다면, 다시 처음으로 돌아간다.
-            userInfoInterface.showInputUserPhoneMessage();
+            requestInputLogPresentation.showRequestUserPhoneMessage();
             String userPhone = input.nextLine();
-            boolean isValidPhoneNumber = hotelService.phoneNumberValidation(userPhone);
+            boolean isValidPhoneNumber = hotelService.validatePhoneNumber(userPhone);
             if(!isValidPhoneNumber) {
-                phoneNumberValidationErrorInterface.showPhoneNumberValidationError();
+                notMatchLogPresentation.showNotMatchPhoneNumberFormatMessage();
                 continue;
             }
 
-            // 3. 업데이트할 보유금을 입력받는다. 만약, 잘못된 형식의 숫자를 입력하면, 다시 처음으로 돌아간다.
             int userAsset;
             try {
-                userInfoInterface.showInputUserAssetMessage();
+                requestInputLogPresentation.showRequestUserAssetMessage();
                 userAsset = Integer.parseInt(input.nextLine());
             }catch (NumberFormatException e){
                 System.out.println("잘못된 형식의 숫자입니다.");
                 continue;
             }
 
-            // 4. 모든 단계를 통과 한다면, 유저정보를 DB에 있는지 확인한다.
-            // 만약, 기존 디비에 있다면, 자산만 업데이트해주고,
-            // 만약, 기존 디비에 없다면, 새로운 유저를 생성해준다.
-            boolean hasUserInDB = hotelService.isFindUserService(userName, userPhone);
+            // 유저가 기존 디비에 있는지 여부를 판단하여, 업데이트 할 지, 새로 생성 할 지를 결정합니다.
+            boolean hasUserInDB = hotelService.validateUserDataInDB(userName, userPhone);
             if(hasUserInDB){
-                hotelService.updateUserAssetService(userName, userPhone, userAsset);
+                hotelService.putUserAsset(userName, userPhone, userAsset);
             }else{
-                hotelService.createUserService(userName, userPhone, userAsset);
+                hotelService.postNewUser(userName, userPhone, userAsset);
             }
 
-            // 5. 서비스 선택
+            // 메인메뉴 진입.
             while (true){
-                selectServiceInterface.showSelectableMainMenu();
-                selectServiceInterface.showSelectNumberInputMessage();
+                selectableMenuLogPresentation.showSelectableMainMenu();
+                requestInputLogPresentation.showRequestMenuNumberMessage();
                 String selectInput = input.nextLine();
                 switch (selectInput){
                     case "1":  // 예약
-                        reservationInterface.startScanner();
+                        // 정규식을 이용한 날짜 포맷 검증 및 예약 범위 검증
+                        requestInputLogPresentation.showRequestDateTimeMessage();
                         String reservationRequestDate = input.nextLine();
-                        boolean isValidDate = hotelService.checkDateFormat(reservationRequestDate);
+                        boolean isValidDate = hotelService.validateDateFormat(reservationRequestDate);
                         if(!isValidDate){
-                            reservationInterface.showOutOfDateRangeMessage();
+                            notMatchLogPresentation.showNotMatchDateTimeFormatMessage();
                             continue;
                         }
-                        List<Room> roomList = hotelService.getReservationableRoomList(reservationRequestDate);
+
+                        // 예약 가능한 방정보를 받아와 있는 경우에만 예약을 진행하기.
+                        List<Room> roomList = hotelService.getBookableRoomList(reservationRequestDate);
                         if(roomList.size() == 0){
-                            reservationInterface.showNoEmptyRoomMessage();
+                            notExistLogPresentation.showNotExistEmptyRoomMessage();
                         }else{
-                            reservationInterface.showHasEmptyRoomMessage(roomList);
+                            getServiceResponseLogPresentation.showGetHotelRoomListMessage(roomList);
+                            requestInputLogPresentation.showRequestRoomNumberMessage();
                             int selectedRoomNo;
                             try {
                                 selectedRoomNo = Integer.parseInt(input.nextLine());
                             }catch(NumberFormatException e){
                                 continue;
                             }
+                            // 예약 요청 시, 소지금 여부를 체크하여 케이스에 맞는 액션을 취합니다.
                             String reservationResponse = hotelService.requestReservation(selectedRoomNo, userName, userPhone, reservationRequestDate);
                             switch (reservationResponse){
                                 case "잔액부족":
-                                    reservationInterface.showNoMoneyReservationMessage();
+                                    notExistLogPresentation.showNotExistRemainMessage();
                                     continue;
                                 case "예약실패":
-                                    reservationInterface.showAlreadyReservationMessage();
+                                    failResultLogPresentation.showFailCancelReservationMessage();
                                     continue;
-                                default:
-                                    reservationInterface.showSuccessReservationMessage(reservationResponse);
+                                default:  // 예약성공
+                                    successResultLogPresentation.showSuccessReservationMessage(reservationResponse);
                                     break;
                             }
                             continue;
                         }
-                    case "2":  // 예약번호 조회
-                        reservationNumberSearchInterface.startScanner();
-                        userInfoInterface.showInputUserNameMessage();
+                    case "2":  // 예약번호 조회 : 유저이름, 유저전화번호를 이용
+                        requestInputLogPresentation.showRequestUserNameMessage();
                         String searchUserName = input.nextLine();
                         if(searchUserName.equals("")){
-                            System.out.println("이름은 공백이 될 수 없습니다.");
+                            notMatchLogPresentation.showNotMatchStringFormatMessage();
                             continue;
                         }
 
-                        userInfoInterface.showInputUserPhoneMessage();
+                        requestInputLogPresentation.showRequestUserPhoneMessage();
                         String searchUserPhone = input.nextLine();
-                        isValidPhoneNumber = hotelService.phoneNumberValidation(searchUserPhone);
+                        isValidPhoneNumber = hotelService.validatePhoneNumber(searchUserPhone);
                         if(!isValidPhoneNumber) {
-                            phoneNumberValidationErrorInterface.showPhoneNumberValidationError();
+                            notMatchLogPresentation.showNotMatchPhoneNumberFormatMessage();
                             continue;
                         }
 
+                        // 예약번호 리스트를 가져와 유무에 따라 각기 다른 화면을 보여주기
                         List<String> reservationIdList = hotelService.getReservationIdList(searchUserName, searchUserPhone);
                         if(reservationIdList.size() == 0){
-                            reservationNumberSearchInterface.showNotExistReservationIdMessage();
+                            notExistLogPresentation.showNotExistReservationIdMessage();
                         }else {
-                            reservationNumberSearchInterface.showExistReservationIdListMessage(reservationIdList);
+                            getServiceResponseLogPresentation.showGetUserAllReservationIdList(reservationIdList);
                         }
                         continue;
-                    case "3":  // 예약내역 조회
-                        reservationSearchInterface.startScanner();
-                        String searchReservationId = input.nextLine();
-                        String reservationSearchResponse = hotelService.getReservationContent(searchReservationId);
-                        if(reservationSearchResponse.equals("")){
-                            reservationSearchInterface.showNotExistReservationMessage();
+                    case "3":  // 예약내역 조회 : 예약번호를 이용
+                        // 예약번호를 입력
+                        requestInputLogPresentation.showRequestReservationIdMessage();
+                        String reservationId = input.nextLine();
+
+                        // 예약번호에 따라 내역이 있는지 유무를 판별하여, 그에 맞는 결과를 보여줍니다.
+                        String reservationApiResponse = hotelService.getReservationContent(reservationId);
+                        if(reservationApiResponse.equals("")){
+                            notExistLogPresentation.showNotExistReservationMessage();
                         }else{
-                            reservationSearchInterface.showReservationInfoMessage(reservationSearchResponse);
+                            getServiceResponseLogPresentation.showGetUserReservationInfoMessage(reservationApiResponse);
                         }
                         continue;
-                    case "4":  // 예약 취소
-                        reservationCancelInterface.startScanner();
-                        searchReservationId = input.nextLine();
-                        reservationSearchResponse = hotelService.getReservationContent(searchReservationId);
-                        if(reservationSearchResponse.equals("")){
-                            reservationCancelInterface.showNotExistReservationMessage();
+                    case "4":  // 예약 취소 : 예약번호를 이용
+                        // 예약번호를 입력받아
+                        requestInputLogPresentation.showRequestReservationIdMessage();
+                        reservationId = input.nextLine();
+
+                        // 검증합니다.
+                        reservationApiResponse = hotelService.getReservationContent(reservationId);
+                        if(reservationApiResponse.equals("")){
+                            notExistLogPresentation.showNotExistReservationMessage();
                             continue;
                         }else{
-                            reservationCancelInterface.showReservationInfoMessage(reservationSearchResponse);
+                            getServiceResponseLogPresentation.showGetUserReservationInfoMessage(reservationApiResponse);
+                            requestInputLogPresentation.showRequestCancelCommandMessage();
                         }
 
+                        // 삭제여부를 재확인합니다.
                         String cancelConfirmCommand = input.nextLine();
                         switch (cancelConfirmCommand){
-                            case "Y":
-                                boolean cancelReservationResponse =  hotelService.requestReservationCancel(searchReservationId);
+                            case "Y":  // 삭제
+                                boolean cancelReservationResponse =  hotelService.deleteReservationById(reservationId);
                                 if (cancelReservationResponse){
-                                    reservationCancelInterface.showSuccessCancelReservationMessage();
+                                    successResultLogPresentation.showSuccessCancelReservationMessage();
                                 }else{
-                                    reservationCancelInterface.showFailCancelReservationMessage();
+                                    failResultLogPresentation.showFailCancelReservationMessage();
                                 }
                                 break;
-                            case "N":
-                                reservationCancelInterface.showFailCancelReservationMessage();
+                            case "N": // 삭제취소
+                                failResultLogPresentation.showFailCancelReservationMessage();
                                 break;
                             default:
-                                reservationCancelInterface.showCommandErrorMessage();
+                                notMatchLogPresentation.showNotMatchCommandMessage();
                         }
                         continue;
                     case "5":  // 호텔 나가기
-                        System.out.println("호텔에서 퇴장합니다. 안녕히가세요:)");
-                        continue exit;
-                    default:
-                        System.out.println("1-5 내의 숫자를 입력해주세요.");
+                        applicationLogPresentation.showApplicationExitMainMenuMessage();
+                        continue returnToStartMenu;
+                    default:   // 이외 커멘드 입력 시 처리
+                        notMatchLogPresentation.showNotMatchMenuNumberMessage();
                 }
             }
         }

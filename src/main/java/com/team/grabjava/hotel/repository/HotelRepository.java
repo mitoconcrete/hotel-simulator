@@ -11,11 +11,17 @@ public class HotelRepository {
     public int getAsset(){
         return hotel.getHotelAsset();
     }
-    public void setAsset(int price){
-        hotel.setAsset(price);
-    }
 
     public List<Room> getRoomList(){
         return hotel.getRoomList();
     }
+
+    public String getAdminPassword(){
+        return hotel.adminPassword();
+    }
+    public void setAsset(int price){
+        hotel.setAsset(price);
+    }
+
+
 }
