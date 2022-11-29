@@ -156,7 +156,7 @@ public class JavaHotelApplication {
                                     notExistLogPresentation.showNotExistRemainMessage();
                                     continue;
                                 case "예약실패":
-                                    failResultLogPresentation.showFailCancelReservationMessage();
+                                    failResultLogPresentation.showFailReservationMessage();
                                     continue;
                                 default:  // 예약성공
                                     successResultLogPresentation.showSuccessReservationMessage(reservationResponse);
