@@ -52,8 +52,11 @@ public class HotelService {
     }
 
     public List<Room> getBookableRoomList(String date){
+        List<Room> list = new ArrayList<>();
 
-        List<Room> list = new ArrayList<>(hotelRepository.getRoomList());
+        for(int i=0;i<hotelRepository.getRoomList().size();i++){
+            list.add(hotelRepository.getRoomList().get(i));
+        }
 
         for(Room room : hotelRepository.getRoomList()) {
             for (Reservation reservation : reservationRepository.getReservationList()) {
