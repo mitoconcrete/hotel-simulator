@@ -33,7 +33,7 @@ public class Hotel {
         return ADMIN_PASSWORD;
     }
 
-    public void setAsset(int price){
-        this.hotelAsset += price;
+    public void setAsset(int updatePayload){
+        this.hotelAsset = updatePayload;
     }
 }

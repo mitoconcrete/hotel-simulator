@@ -37,9 +37,10 @@ public class HotelService {
                             // ReservationRepository에서 id를 새로 생성해주고 Db에 저장해준다.
                             // id를 받아와야됨 -> reservationRapository에서 reservation list를 for문으로 돌리고, if문으로 이름번호 같은애(다른거도 비교해야하나 생각해보기) 뽑아서 같은거의 id값을 찾는다.
                             int updateUserAsset = user.getUserAsset() - room.getPrice();
+                            int updateHotelAsset = getHotelAsset() + room.getPrice();
                             user.setUserAsset(updateUserAsset);
                             Reservation reservation = reservationRepository.createReservation(room, userName, userPhone, date);
-                            putHotelAsset(reservation.getRoom().getPrice());
+                            putHotelAsset(updateHotelAsset);
                             return reservation.getReservationId();  // 찾은거를 (reservation.getId)리턴한다.
                         } else {
                             return "잔액부족";
@@ -109,13 +110,14 @@ public class HotelService {
 
     public void putHotelAsset(int userAsset){
         hotelRepository.setAsset(userAsset);
-        hotelRepository.getAsset();
     }
 
     // 4. DELETE Service
     public boolean deleteReservationById(String reservationId){
         for (Reservation r : reservationRepository.getReservationList()) {
             if(r.getReservationId().equals(reservationId)){
+                int updateHotelAsset = getHotelAsset() - r.getRoom().getPrice();
+                putHotelAsset(updateHotelAsset);
                 reservationRepository.deleteReservation(r);
                 return true;
             }
