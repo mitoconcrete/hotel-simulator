@@ -79,7 +79,7 @@ public class JavaHotelApplication {
                             // 이외 커멘드가 들어오면, 커멘드로 관리자모드 진입여부를 판단하여, 다음사이클에서의 액션을 결정.
                             isAdminMode = hotelService.validateAdminPassword(startMenuSelectCommand);
                             if(!isAdminMode){
-                                notMatchLogPresentation.showNotMatchPasswordMessage();
+                                notMatchLogPresentation.showNotMatchCommandMessage();
                             }
                 }
             }
